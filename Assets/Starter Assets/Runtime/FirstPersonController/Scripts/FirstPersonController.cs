@@ -73,16 +73,18 @@ namespace StarterAssets
 		private GameObject _mainCamera;
 
 		private const float _threshold = 0.01f;
+		private bool isInInspection = false;
+		public bool IsInInspection { get { return isInInspection; } set{ isInInspection = value; }}
 
 		private bool IsCurrentDeviceMouse
 		{
 			get
 			{
-				#if ENABLE_INPUT_SYSTEM
+#if ENABLE_INPUT_SYSTEM
 				return _playerInput.currentControlScheme == "KeyboardMouse";
-				#else
+#else
 				return false;
-				#endif
+#endif
 			}
 		}
 
@@ -131,12 +133,13 @@ namespace StarterAssets
 
 		private void CameraRotation()
 		{
+			if (isInInspection) return;
 			// if there is an input
 			if (_input.look.sqrMagnitude >= _threshold)
 			{
 				//Don't multiply mouse input by Time.deltaTime
 				float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;
-				
+
 				_cinemachineTargetPitch += _input.look.y * RotationSpeed * deltaTimeMultiplier;
 				_rotationVelocity = _input.look.x * RotationSpeed * deltaTimeMultiplier;
 

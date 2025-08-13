@@ -1,4 +1,5 @@
 using System.Collections;
+using StarterAssets;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -31,6 +32,7 @@ public class InspectionController : MonoBehaviour
 
     private InspectableItem inspectingItemComp;
     private ItemData inspectingData;
+    private FirstPersonController fpsPlayer;
 
     private void Awake()
     {
@@ -48,12 +50,18 @@ public class InspectionController : MonoBehaviour
         pickupButton.gameObject.SetActive(false);
     }
 
+    private void Start()
+    {
+        fpsPlayer = FindFirstObjectByType<FirstPersonController>();
+    }
+
     public void StartInspect(InspectableItem item)
     {
         if (inspecting || item == null || item.instance == null || item.instance.data == null)
             return;
 
         inspecting = true;
+        fpsPlayer.IsInInspection = inspecting;
         inspectingItemComp = item;
         inspectingData = item.instance.data;
 
@@ -136,6 +144,7 @@ public class InspectionController : MonoBehaviour
     {
         if (!inspecting) return;
         inspecting = false;
+        fpsPlayer.IsInInspection = inspecting;
 
         // Restore item’s transform
         currentItem.SetParent(originalParent, true);
